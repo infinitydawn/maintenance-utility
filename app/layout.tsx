@@ -23,8 +23,8 @@ export default function DashboardLayout({
               </Link>
             </li>
             <li>
-              <Link href="/projects" className="text-white hover:text-gray-300">
-                Projects
+              <Link href="/buildings" className="text-white hover:text-gray-300">
+                Buildings
               </Link>
             </li>
           </ul>
