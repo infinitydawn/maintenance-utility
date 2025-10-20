@@ -1,6 +1,6 @@
 
 import Link from 'next/link'
-import Zone from '@/app/UI/zone'
+import Zone from '@/app/ui/zone'
 
 let array = [
     { "id": 1, "zone": 1, "floor": "1FL", "location": "Electric Rm" },
