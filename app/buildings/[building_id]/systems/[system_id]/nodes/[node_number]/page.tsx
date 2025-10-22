@@ -1,12 +1,12 @@
 // "use client";
 
 // import { useSearchParams } from 'next/navigation';
-import { fetchLoopsInfo } from "@/app/lib/data";
-import { fetchNodeInfoSingle } from "@/app/lib/data";
+import { fetchLoopsInfo } from "@/lib/data";
+import { fetchNodeInfoSingle } from "@/lib/data";
 import Link from "next/link";
-import CreateModal from "@/app/ui/CreateModal";
+import CreateModalWrapper from "@/app/ui/CreateModalWrapper";
 import CreateButton from "@/app/ui/create_button";
-import { createLoop, updateNodeLevelInfo } from "@/app/lib/actions";
+import { createLoop, updateNodeLevelInfo } from "@/lib/actions";
 import Input from "@/app/ui/input";
 //  function fakeFunction(){
 //         return null;
@@ -69,27 +69,14 @@ export default async function Node({ params }: { params: { building_id: string, 
                 )}
 
 
-            <CreateButton btnName="Create Loop" />
-
-            <CreateModal
+            <CreateModalWrapper
                 title={`Create A New Loop In ${nodeInfo[0].system_name}`}
+                type="loop"
+                btnName="Create Loop"
                 info={{ building_id, system_id: nodeInfo[0].system_id, node_number: nodeInfo[0].node_number }}
-                db_func={createLoop}
                 fields={[
-                    {
-                        label: "Loop Number",
-                        type: "number",
-                        placeholder: "Loop Number",
-                        defaultValue: "",
-                        id: "loop_number"
-                    },
-                    {
-                        label: "Loop Info",
-                        type: "text",
-                        placeholder: "Loop Info",
-                        defaultValue: "",
-                        id: "loop_info"
-                    }
+                    { label: 'Loop Number', type: 'number', placeholder: 'Loop Number', defaultValue: '', id: 'loop_number' },
+                    { label: 'Loop Info', type: 'text', placeholder: 'Loop Info', defaultValue: '', id: 'loop_info' },
                 ]}
             />
         </div>

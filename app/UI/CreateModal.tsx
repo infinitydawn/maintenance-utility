@@ -1,108 +1,90 @@
 'use client';
-import React, { useState } from "react";
-
+import React, { useEffect, useState } from 'react';
 
 interface Field {
     label: string;
     type: string;
     placeholder?: string;
     defaultValue?: string;
-    id: string; // id should be required
+    id: string;
 }
 
 interface CreateModalProps {
     title: string;
-    db_func: (...args: any[]) => any;
     fields: Field[];
-    info: object
+    info?: Record<string, any>;
+    open: boolean;
+    onClose: () => void;
+    onCreate: (payload: Record<string, any>) => Promise<any>;
 }
 
 export default function CreateModal(props: CreateModalProps) {
-    const { title } = props;
-    const { db_func } = props;
-    const fields = props.fields || [{
-        label: "No fields provided",
-        type: "text",
-        placeholder: "No fields provided",
-        defaultValue: "No fields provided",
-        id: "no-fields"
-    }];
+    const { title, fields, open, onClose, onCreate, info = {} } = props;
 
-    // Initialize state for field values
-    const [values, setValues] = useState<{ [key: string]: string }>(
-        Object.fromEntries(fields.map(f => [f.id, f.defaultValue || ""]))
-    );
+    const initialValues = Object.fromEntries(fields.map((f) => [f.id, f.defaultValue || '']));
+    const [values, setValues] = useState<Record<string, any>>(initialValues);
+    const [loading, setLoading] = useState(false);
 
-    // Handle input change
+    useEffect(() => {
+        if (open) {
+            setValues(initialValues);
+        }
+    }, [open]);
+
     const handleChange = (id: string, value: string) => {
-        setValues(prev => ({ ...prev, [id]: value }));
+        setValues((prev) => ({ ...prev, [id]: value }));
     };
 
-    // Handle create button click
-    const handleCreate = async (e: React.MouseEvent) => {
-
+    const handleCreate = async (e?: React.FormEvent) => {
+        if (e) e.preventDefault();
         try {
-            e.preventDefault();
-
-            console.log({ ...values, ...props.info }); // Log the values to the console
-
-            // Call the database function with the values
-            let res = await db_func({ ...values, ...props.info });
-
-            alert("Created successfully!");
-
-            console.log(res)
-
-            const message = Object.entries(values)
-                .map(([id, value]) => `${id}: ${value}`)
-                .join('\n');
-            // alert(message);
-
-            //close modal and reload page
-            const modal = document.getElementById('my_modal_4') as HTMLDialogElement;
-            setValues(Object.fromEntries(fields.map(f => [f.id, f.defaultValue || ""])));
-            modal.close();
-            window.location.reload();
-        }
-        catch (error) {
-            console.error("Error creating entry:", error);
-            const errorMessage = (error instanceof Error) ? error.message : String(error);
-            alert("Failed to create entry. Please try again. " + errorMessage);
+            setLoading(true);
+            const payload = { ...values, ...info };
+            await onCreate(payload);
+            setLoading(false);
+            onClose();
+        } catch (err) {
+            setLoading(false);
+            console.error('Create failed', err);
+            alert('Create failed: ' + String(err));
         }
     };
+
+    if (!open) return null;
 
     return (
-        <div>
-            <dialog id="my_modal_4" className="modal">
-                <div className="modal-box w-11/12 max-w-5xl">
-                    <h3 className="font-bold text-lg">{title}</h3>
+        <div className="modal modal-open">
+            <div className="modal-box w-11/12 max-w-5xl">
+                <h3 className="font-bold text-lg">{title}</h3>
+                <form onSubmit={handleCreate}>
                     {fields.map((field) => (
                         <div key={field.id} className="mb-4">
-                            <label className="label" htmlFor={field.id}>{field.label}</label>
+                            {!!field.label && (
+                                <label className="label" htmlFor={field.id}>
+                                    {field.label}
+                                </label>
+                            )}
                             <input
+                                id={field.id}
                                 type={field.type}
                                 className="input"
                                 placeholder={field.placeholder || field.label}
-                                id={field.id}
                                 value={values[field.id]}
-                                onChange={e => handleChange(field.id, e.target.value)}
+                                onChange={(e) => handleChange(field.id, e.target.value)}
                             />
                         </div>
                     ))}
+
                     <div className="modal-action">
-                        <form method="dialog" className="flex items-center ">
-                            <button className="btn">Close</button>
-                            <button
-                                className="btn btn-primary"
-                                type="button"
-                                onClick={handleCreate}
-                            >
-                                Create
-                            </button>
-                        </form>
+                        <button type="button" className="btn" onClick={onClose} disabled={loading}>
+                            Close
+                        </button>
+                        <button type="submit" className="btn btn-primary" disabled={loading}>
+                            {loading ? 'Creating...' : 'Create'}
+                        </button>
                     </div>
-                </div>
-            </dialog>
+                </form>
+            </div>
         </div>
     );
 }

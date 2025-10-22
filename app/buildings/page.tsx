@@ -1,41 +1,22 @@
 
 import BuildingsTable from "@/app/ui/buildings/buildings_table";
 import Search from "@/app/ui/search";
-import CreateModal from "@/app/ui/CreateModal";
-import CreateButton from "@/app/ui/create_button";
+import CreateModalWrapper from "@/app/ui/CreateModalWrapper";
 
-import { createBuilding } from "@/app/lib/actions"; 
+import { createBuilding } from "@/lib/actions"; 
 
 export default function Buildings() {
     return (
         <main>
-            <CreateButton btnName="New Building" />
-            <CreateModal
+            <CreateModalWrapper
                 title="Create New Building"
-                db_func={createBuilding}
+                type="building"
+                btnName="New Building"
                 info={{}}
                 fields={[
-                    {
-                        label: "Building Name",
-                        type: "text",
-                        placeholder: "Enter building name",
-                        defaultValue: "",
-                        id: "building_name"
-                    },
-                    {
-                        label: "Building Address",
-                        type: "text",
-                        placeholder: "Enter building address",
-                        defaultValue: "",
-                        id: "building_address"
-                    },
-                    {
-                        label: "Building Description",
-                        type: "text",
-                        placeholder: "Enter building description",
-                        defaultValue: "",
-                        id: "building_description"
-                    }
+                    { label: 'Building Name', type: 'text', placeholder: 'Enter building name', defaultValue: '', id: 'building_name' },
+                    { label: 'Building Address', type: 'text', placeholder: 'Enter building address', defaultValue: '', id: 'building_address' },
+                    { label: 'Building Description', type: 'text', placeholder: 'Enter building description', defaultValue: '', id: 'building_description' },
                 ]}
             />
             <Search placeholder="Search buildings..." />

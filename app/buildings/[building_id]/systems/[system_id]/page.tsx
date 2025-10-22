@@ -1,16 +1,16 @@
-import { fetchNodesInfo } from "@/app/lib/data";
-import { fetchBuildingInfo } from "@/app/lib/data";
+import { fetchNodesInfo } from "@/lib/data";
+import { fetchBuildingInfo } from "@/lib/data";
 import Link from "next/link";
 import Image from 'next/image';
-import CreateModal from "@/app/ui/CreateModal";
+import CreateModalWrapper from "@/app/ui/CreateModalWrapper";
 import CreateButton from "@/app/ui/create_button";
 import Input from "@/app/ui/input";
 
-import { createNode } from "@/app/lib/actions";
-import { updateSystemLevelInfo } from "@/app/lib/actions";
+import { createNode } from "@/lib/actions";
+import { updateSystemLevelInfo } from "@/lib/actions";
 
-export default async function System({ params }: { params: Promise<{ building_id: string, system_id: string }> }) {
-    const { building_id, system_id } = await params;
+export default async function System({ params }: { params: { building_id: string, system_id: string } }) {
+    const { building_id, system_id } = params;
     const nodesInfo = await fetchNodesInfo(system_id);
     let systemInfo = undefined;
     if (nodesInfo === undefined || nodesInfo.length === 0) {
@@ -73,27 +73,14 @@ export default async function System({ params }: { params: Promise<{ building_id
                 </>
             )}
 
-            <CreateButton btnName="Create Node" />
-
-            <CreateModal
+            <CreateModalWrapper
                 title={`Create A New Node In ${systemInfo[0].system_name}`}
+                type="node"
+                btnName="Create Node"
                 info={{ building_id, system_id: systemInfo[0].system_id }}
-                db_func={createNode}
                 fields={[
-                    {
-                        label: "Node Location",
-                        type: "text",
-                        placeholder: "Enter Node Location",
-                        defaultValue: "",
-                        id: "node_location"
-                    },
-                    {
-                        label: "Node Number",
-                        type: "number",
-                        placeholder: "Enter Node Number",
-                        defaultValue: "",
-                        id: "node_number"
-                    }
+                    { label: 'Node Location', type: 'text', placeholder: 'Enter Node Location', defaultValue: '', id: 'node_location' },
+                    { label: 'Node Number', type: 'number', placeholder: 'Enter Node Number', defaultValue: '', id: 'node_number' },
                 ]}
             />
 

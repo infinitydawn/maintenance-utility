@@ -1,15 +1,19 @@
 // "use client";
 
 // import { useSearchParams } from 'next/navigation';
-import { fetchBuildingInfo } from "@/app/lib/data";
+import { fetchBuildingInfo } from "@/lib/data";
 import Link from "next/link";
-import CreateModal from "@/app/ui/CreateModal";
+import CreateModalWrapper from "@/app/ui/CreateModalWrapper";
 import CreateButton from "@/app/ui/create_button";
 
-import { createSystem } from "@/app/lib/actions";
+import { createSystem } from "@/lib/actions";
 
-export default async function Building({ params }: { params: { building_id: string } }) {
-    const { building_id } = await params;
+export default async function Building({ params }: { params: Promise<{ building_id: string | string[] }> }) {
+    const { building_id: rawId } = await params;
+    const building_id = Array.isArray(rawId) ? rawId[0] : rawId;
+    if (!building_id) {
+        throw new Error("Missing building_id");
+    }
 
     const bldgInfo = await fetchBuildingInfo(building_id);
 
@@ -41,43 +45,16 @@ export default async function Building({ params }: { params: { building_id: stri
                 </>
             )}
 
-            <CreateButton btnName="Create System" />
-
-
-
-            <CreateModal
+            <CreateModalWrapper
                 title="Create New System"
-                info = {{building_id}}
-                db_func={createSystem}
+                type="system"
+                btnName="Create System"
+                info={{ building_id }}
                 fields={[
-                    {
-                        label: "System Name",
-                        type: "text",
-                        placeholder: "Enter system name",
-                        defaultValue: "",
-                        id: "system_name"
-                    },
-                    {
-                        label: "System Type",
-                        type: "text",
-                        placeholder: "Enter system type",
-                        defaultValue: "",
-                        id: "system_type"
-                    },
-                    {
-                        label: "System Model",
-                        type: "text",
-                        placeholder: "Enter system Model",
-                        defaultValue: "",
-                        id: "system_model"
-                    },
-                    {
-                        label: "System Manufacturer",
-                        type: "text",
-                        placeholder: "Enter system Manufacturer",
-                        defaultValue: "",
-                        id: "system_manufacturer"
-                    },
+                    { label: 'System Name', type: 'text', placeholder: 'Enter system name', defaultValue: '', id: 'system_name' },
+                    { label: 'System Type', type: 'text', placeholder: 'Enter system type', defaultValue: '', id: 'system_type' },
+                    { label: 'System Model', type: 'text', placeholder: 'Enter system Model', defaultValue: '', id: 'system_model' },
+                    { label: 'System Manufacturer', type: 'text', placeholder: 'Enter system Manufacturer', defaultValue: '', id: 'system_manufacturer' },
                 ]}
             />
         </ul>

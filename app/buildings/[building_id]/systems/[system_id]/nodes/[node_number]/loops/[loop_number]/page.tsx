@@ -1,9 +1,9 @@
-import { fetchLoopsInfo, fetchZonesInfo } from "@/app/lib/data";
+import { fetchLoopsInfo, fetchZonesInfo } from "@/lib/data";
 import CreateButton from "@/app/ui/create_button";
-import CreateModal from "@/app/ui/CreateModal";
-import { createZone } from "@/app/lib/actions";
+import CreateModalWrapper from "@/app/ui/CreateModalWrapper";
+import { createZone, updateZoneLevelInfo, updateLoopLevelInfo } from "@/lib/actions";
 import Input from "@/app/ui/input";
-import { updateLoopLevelInfo } from "@/app/lib/actions";
+import ZoneField from "@/app/ui/ZoneField";
 
 
 export default async function Loops({ params }: { params: { building_id: string, system_id: string, node_number: string, loop_number: string } }) {
@@ -46,11 +46,62 @@ export default async function Loops({ params }: { params: { building_id: string,
                             </thead>
                             <tbody>
                                 {zonesInfo.map((zone: any) => (
-                                    <tr key={zone.zone_number + zone.zone_prefix}>
-                                        <th>{zone.zone_prefix === "_" ? "" : zone.zone_prefix}{zone.zone_number}</th>
-                                        <td>{zone.zone_tag_1}</td>
-                                        <td>{zone.zone_tag_2}</td>
-                                    </tr>
+                                            <tr key={zone.zone_number + zone.zone_prefix}>
+                                                <th>{zone.zone_prefix === "_" ? "" : zone.zone_prefix}{zone.zone_number}</th>
+                                                <td>
+                                                    <Input
+                                                        label={"Tag 1"}
+                                                        type="text"
+                                                        db_func={updateZoneLevelInfo}
+                                                        fieldName="zone_tag_1"
+                                                        info={{ system_id: Number(system_id), node_number: Number(node_number), loop_number: Number(loop_number), zone_number: zone.zone_number, zone_prefix: zone.zone_prefix }}
+                                                        id={`zone_${zone.zone_prefix}_${zone.zone_number}_tag_1`}
+                                                        defaultValue={zone.zone_tag_1}
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <Input
+                                                        label={"Tag 2"}
+                                                        type="text"
+                                                        db_func={updateZoneLevelInfo}
+                                                        fieldName="zone_tag_2"
+                                                        info={{ system_id: Number(system_id), node_number: Number(node_number), loop_number: Number(loop_number), zone_number: zone.zone_number, zone_prefix: zone.zone_prefix }}
+                                                        id={`zone_${zone.zone_prefix}_${zone.zone_number}_tag_2`}
+                                                        defaultValue={zone.zone_tag_2}
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <Input
+                                                        label={"Tag 3"}
+                                                        type="text"
+                                                        db_func={updateZoneLevelInfo}
+                                                        fieldName="zone_tag_3"
+                                                        info={{ system_id: Number(system_id), node_number: Number(node_number), loop_number: Number(loop_number), zone_number: zone.zone_number, zone_prefix: zone.zone_prefix }}
+                                                        id={`zone_${zone.zone_prefix}_${zone.zone_number}_tag_3`}
+                                                        defaultValue={zone.zone_tag_3}
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <ZoneField value={!!zone.passed} field="passed" info={{ system_id: Number(system_id), node_number: Number(node_number), loop_number: Number(loop_number), zone_number: zone.zone_number, zone_prefix: zone.zone_prefix }} />
+                                                </td>
+                                                <td>
+                                                    <ZoneField value={!!zone.failed} field="failed" info={{ system_id: Number(system_id), node_number: Number(node_number), loop_number: Number(loop_number), zone_number: zone.zone_number, zone_prefix: zone.zone_prefix }} />
+                                                </td>
+                                                <td>
+                                                    <Input
+                                                        label={"Initials"}
+                                                        type="text"
+                                                        db_func={updateZoneLevelInfo}
+                                                        fieldName="initials"
+                                                        info={{ system_id: Number(system_id), node_number: Number(node_number), loop_number: Number(loop_number), zone_number: zone.zone_number, zone_prefix: zone.zone_prefix }}
+                                                        id={`zone_${zone.zone_prefix}_${zone.zone_number}_initials`}
+                                                        defaultValue={zone.initials}
+                                                    />
+                                                </td>
+                                                <td>
+                                                    {zone.date_tested ? new Date(zone.date_tested).toLocaleString() : ''}
+                                                </td>
+                                            </tr>
                                 ))}
                             </tbody>
                         </table>
@@ -58,42 +109,16 @@ export default async function Loops({ params }: { params: { building_id: string,
                 </div>
             ) : null}
 
-            <CreateButton btnName="Create Zone" />
-
-            <CreateModal
+            <CreateModalWrapper
                 title={`Create A New Zone`}
+                type="zone"
+                btnName="Create Zone"
                 info={{ building_id, system_id: loopInfo[0].system_id, node_number: loopInfo[0].node_number, loop_number }}
-                db_func={createZone}
                 fields={[
-                    {
-                        label: "Zone Number",
-                        type: "number",
-                        placeholder: "Zone Number",
-                        defaultValue: "",
-                        id: "zone_number"
-                    },
-                    {
-                        label: "Zone Prefix",
-                        type: "text",
-                        placeholder: "Zone Prefix",
-                        defaultValue: "",
-                        id: "zone_prefix"
-                    },
-                    {
-                        label: "Zone Tag 1",
-                        type: "text",
-                        placeholder: "Zone Tag 1",
-                        defaultValue: "",
-                        id: "zone_tag_1"
-                    },
-                    {
-                        label: "Zone Tag 2",
-                        type: "text",
-                        placeholder: "Zone Tag 2",
-                        defaultValue: "",
-                        id: "zone_tag_2"
-                    }
-
+                    { label: 'Zone Number', type: 'number', placeholder: 'Zone Number', defaultValue: '', id: 'zone_number' },
+                    { label: 'Zone Prefix', type: 'text', placeholder: 'Zone Prefix', defaultValue: '', id: 'zone_prefix' },
+                    { label: 'Zone Tag 1', type: 'text', placeholder: 'Zone Tag 1', defaultValue: '', id: 'zone_tag_1' },
+                    { label: 'Zone Tag 2', type: 'text', placeholder: 'Zone Tag 2', defaultValue: '', id: 'zone_tag_2' },
                 ]}
             />
         </div>

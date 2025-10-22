@@ -1,6 +1,5 @@
 'use client';
 
-import { usePathname, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import Checkmark from "./checkmark";
 import Crossmark from "./crossmark";
@@ -17,7 +16,7 @@ interface InputProps {
 }
 
 
-export default function Input(props: InputProps & { as?: React.ElementType }) {
+export default function Input(props: InputProps & { as?: React.ElementType; fieldName?: string }) {
     const {
         as: Component = "input", // default to input, allow override
         label,
@@ -27,11 +26,11 @@ export default function Input(props: InputProps & { as?: React.ElementType }) {
         db_func,
         info,
         id,
+        fieldName,
         ...rest
-    } = props;
+    } = props as any;
 
-    const searchParams = useSearchParams();
-    const pathname = usePathname();
+
 
 
     const [isFocused, setIsFocused] = useState(false);
@@ -50,7 +49,8 @@ export default function Input(props: InputProps & { as?: React.ElementType }) {
             handleUpdating(true);
             setUpdateFailed(false);
             // throw new Error("Simulated error"); // Simulate an error for testing
-            await db_func(id, term, info);
+            const fieldToUpdate = fieldName || id;
+            await db_func(fieldToUpdate, term, info);
             handleUpdating(false);
             showCheckMark();
         } catch (error) {
