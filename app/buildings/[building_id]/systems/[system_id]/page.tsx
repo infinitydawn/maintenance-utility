@@ -9,8 +9,10 @@ import Input from "@/app/ui/input";
 import { createNode } from "@/lib/actions";
 import { updateSystemLevelInfo } from "@/lib/actions";
 
-export default async function System({ params }: { params: { building_id: string, system_id: string } }) {
-    const { building_id, system_id } = params;
+type SystemPageParams = { building_id: string; system_id: string };
+
+export default async function System({ params }: { params: Promise<SystemPageParams> }) {
+    const { building_id, system_id } = await params;
     const nodesInfo = await fetchNodesInfo(system_id);
     let systemInfo = undefined;
     if (nodesInfo === undefined || nodesInfo.length === 0) {

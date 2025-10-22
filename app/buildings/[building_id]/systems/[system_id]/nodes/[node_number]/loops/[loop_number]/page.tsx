@@ -6,7 +6,9 @@ import Input from "@/app/ui/input";
 import ZoneField from "@/app/ui/ZoneField";
 
 
-export default async function Loops({ params }: { params: { building_id: string, system_id: string, node_number: string, loop_number: string } }) {
+type LoopPageParams = { building_id: string; system_id: string; node_number: string; loop_number: string };
+
+export default async function Loops({ params }: { params: Promise<LoopPageParams> }) {
     const { building_id, system_id, node_number, loop_number } = await params;
 
     const loopInfo = await fetchLoopsInfo(system_id, node_number);

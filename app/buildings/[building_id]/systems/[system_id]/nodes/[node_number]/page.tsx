@@ -12,7 +12,9 @@ import Input from "@/app/ui/input";
 //         return null;
 //     }
 
-export default async function Node({ params }: { params: { building_id: string, system_id: string, node_number: string } }) {
+type NodePageParams = { building_id: string; system_id: string; node_number: string };
+
+export default async function Node({ params }: { params: Promise<NodePageParams> }) {
     const { building_id, system_id, node_number } = await params;
 
     const loopsInfo = await fetchLoopsInfo(system_id, node_number);
