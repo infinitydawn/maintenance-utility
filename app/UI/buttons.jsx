@@ -1,5 +1,5 @@
 'use client';
-import { showTables, createTable } from "@/app/lib/actions";
+import { showTables, createTable } from "@/lib/actions";
 
 export function  ShowTables (){
     return (

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { showTables, createTable } from '@/app/lib/actions';
+import { showTables, createTable } from '@/lib/actions';
 
 export async function GET() {
   try {
