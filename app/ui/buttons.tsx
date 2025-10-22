@@ -4,7 +4,12 @@ import React from 'react';
 async function apiGetTables() {
   const res = await fetch('/api/tables', { cache: 'no-store' });
   if (!res.ok) throw new Error('Failed to fetch tables');
-  return res.json();
+  try {
+    return await res.json();
+  } catch (err) {
+    const text = await res.text();
+    throw new Error(text || 'Invalid JSON response from server');
+  }
 }
 
 async function apiCreateTable(tableName?: string) {
@@ -14,7 +19,12 @@ async function apiCreateTable(tableName?: string) {
     body: JSON.stringify({ tableName }),
   });
   if (!res.ok) throw new Error('Failed to create table');
-  return res.json();
+  try {
+    return await res.json();
+  } catch (err) {
+    const text = await res.text();
+    throw new Error(text || 'Invalid JSON response from server');
+  }
 }
 
 export function ShowTables() {

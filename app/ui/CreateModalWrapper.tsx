@@ -17,12 +17,14 @@ export default function CreateModalWrapper({
   fields,
   info,
   btnName,
+  onCreated,
 }: {
   title: string;
   type: 'building' | 'system' | 'node' | 'loop' | 'zone';
   fields: Field[];
   info?: Record<string, any>;
   btnName: string;
+  onCreated?: (row: any) => void;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -32,8 +34,16 @@ export default function CreateModalWrapper({
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ type, payload }),
     });
-    if (!res.ok) throw new Error('Create failed');
-    return res.json();
+    let data: any;
+    try {
+      data = await res.json();
+    } catch (parseErr) {
+      const text = await res.text();
+      throw new Error(text || 'Invalid JSON response from server');
+    }
+    if (!res.ok) throw new Error(data?.error || 'Create failed');
+    onCreated?.(data);
+    return data;
   };
 
   return (

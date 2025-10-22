@@ -7,10 +7,12 @@ export default function ZoneField({
   value,
   field,
   info,
+  className,
 }: {
   value: boolean;
   field: 'passed' | 'failed';
   info: { system_id: number; node_number: number; loop_number: number; zone_number: number; zone_prefix?: string };
+  className?: string;
 }) {
   const [isUpdating, setUpdating] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -39,7 +41,12 @@ export default function ZoneField({
 
   return (
     <div className="relative inline-block">
-      <select defaultValue={value ? 'yes' : 'no'} onChange={handleChange} className="select select-sm" disabled={isUpdating}>
+      <select
+        defaultValue={value ? 'yes' : 'no'}
+        onChange={handleChange}
+        className={`select select-sm ${className ?? ''}`}
+        disabled={isUpdating}
+      >
         <option value="yes">Yes</option>
         <option value="no">No</option>
       </select>

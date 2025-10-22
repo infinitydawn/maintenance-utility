@@ -212,3 +212,75 @@ export async function updateZoneLevelInfo(
         throw new Error('Failed to update zone data: ' + (error instanceof Error ? error.message : String(error)));
     }
 }
+
+// Rename (change primary key fields) for a zone. This performs an UPDATE to set
+// a new zone_number and/or zone_prefix for a single zone identified by the
+// current keys. Caller must ensure no collisions with existing zone keys.
+export async function renameZone(
+    info: { system_id: number; node_number: number; loop_number: number; zone_number: number; zone_prefix?: string },
+    newZoneNumber: number,
+    newZonePrefix?: string
+) {
+    const zone_prefix = info.zone_prefix ?? '';
+    const new_prefix = newZonePrefix ?? '';
+    try {
+        const result = await sql`
+            UPDATE zones
+            SET zone_number = ${newZoneNumber}, zone_prefix = ${new_prefix}
+            WHERE system_id = ${info.system_id} AND node_number = ${info.node_number} AND loop_number = ${info.loop_number} AND zone_number = ${info.zone_number} AND zone_prefix = ${zone_prefix}`;
+        return result;
+    } catch (err) {
+        console.error('renameZone error', err);
+        throw err;
+    }
+}
+
+// Delete a zone by its composite key. Returns the deleted rows (should be 1 or 0).
+export async function deleteZone(info: { system_id: number; node_number: number; loop_number: number; zone_number: number; zone_prefix?: string }) {
+    const zone_prefix = info.zone_prefix ?? '';
+    try {
+        const result = await sql`
+            DELETE FROM zones
+            WHERE system_id = ${info.system_id} AND node_number = ${info.node_number} AND loop_number = ${info.loop_number} AND zone_number = ${info.zone_number} AND zone_prefix = ${zone_prefix}
+            RETURNING *`;
+        return result;
+    } catch (err) {
+        console.error('deleteZone error', err);
+        throw err;
+    }
+}
+
+// Inspections: store inspection history per zone
+export async function createInspection(data: { system_id: number; node_number: number; loop_number: number; zone_number: number; zone_prefix?: string; passed: boolean; comments?: string }) {
+    const zone_prefix = data.zone_prefix ?? '';
+    try {
+        const result = await sql`
+            INSERT INTO inspections (system_id, node_number, loop_number, zone_number, zone_prefix, passed, comments, tested_at)
+            VALUES (${data.system_id}, ${data.node_number}, ${data.loop_number}, ${data.zone_number}, ${zone_prefix}, ${data.passed}, ${data.comments || null}, CURRENT_TIMESTAMP)
+            RETURNING *`;
+        return result;
+    } catch (err) {
+        console.error('createInspection error', err);
+        throw err;
+    }
+}
+
+export async function fetchInspectionsForZone(info: { system_id: number; node_number: number; loop_number: number; zone_number: number; zone_prefix?: string }) {
+    const zone_prefix = info.zone_prefix ?? '';
+    try {
+        const rows = await sql`
+            SELECT id, passed, comments, tested_at
+            FROM inspections
+            WHERE system_id = ${info.system_id} AND node_number = ${info.node_number} AND loop_number = ${info.loop_number} AND zone_number = ${info.zone_number} AND zone_prefix = ${zone_prefix}
+            ORDER BY tested_at DESC`;
+        return rows;
+    } catch (err) {
+        // If the inspections table does not exist yet, return empty array instead of throwing
+        const message = err instanceof Error ? err.message : String(err);
+        if (message.includes('relation "inspections" does not exist') || message.includes('does not exist')) {
+            return [] as any[];
+        }
+        console.error('fetchInspectionsForZone error', err);
+        throw err;
+    }
+}
