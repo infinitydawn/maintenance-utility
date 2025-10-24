@@ -5,7 +5,10 @@ import CreateModalWrapper from "@/app/ui/CreateModalWrapper";
 
 import { createBuilding } from "@/lib/actions"; 
 
-export default function Buildings() {
+export default async function Buildings(props: any) {
+    // `searchParams` may be a Promise in some Next.js versions; await it before accessing properties
+    const sp = props?.searchParams ? await props.searchParams : undefined;
+    const query = sp?.query ?? undefined;
     return (
         <main>
             <CreateModalWrapper
@@ -20,7 +23,9 @@ export default function Buildings() {
                 ]}
             />
             <Search placeholder="Search buildings..." />
-            <BuildingsTable />
+            {/* Pass the query from URL search params into the server-side BuildingsTable */}
+            {/* BuildingsTable is a server component and will fetch filtered data */}
+            <BuildingsTable query={query} />
             {/* <button className="btn btn-primary fixed bottom-3 right-3">+</button> */}
 
         </main>

@@ -1,9 +1,10 @@
 import { fetchBuildings } from '@/lib/data';
 import Link from 'next/link';
 import { Building } from '@/lib/types';
+import IconImage from '../IconImage';
 
-export default async function BuildingsTable() {
-    const buildings = (await fetchBuildings()) as unknown as Building[];
+export default async function BuildingsTable({ query }: { query?: string }) {
+    const buildings = (await fetchBuildings(query)) as unknown as Building[];
     console.log('Buildings:', buildings);
 
     if (!buildings || buildings.length === 0) {
@@ -22,8 +23,8 @@ export default async function BuildingsTable() {
                 return (
                     <li key={building.building_id} className="list-row">
                         <div>
-                            <img
-                                className="size-10 rounded-box invert"
+                            <IconImage
+                                className="size-10 rounded-box"
                                 src="https://cdn-icons-png.flaticon.com/512/24/24914.png"
                                 alt="building"
                             />

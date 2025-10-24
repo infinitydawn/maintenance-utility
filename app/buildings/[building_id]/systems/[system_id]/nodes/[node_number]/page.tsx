@@ -6,6 +6,7 @@ import { fetchNodeInfoSingle } from "@/lib/data";
 import Link from "next/link";
 import CreateModalWrapper from "@/app/ui/CreateModalWrapper";
 import CreateButton from "@/app/ui/create_button";
+import IconImage from '@/app/ui/IconImage';
 import { createLoop, updateNodeLevelInfo } from "@/lib/actions";
 import Input from "@/app/ui/input";
 //  function fakeFunction(){
@@ -51,7 +52,7 @@ export default async function Node({ params }: { params: Promise<NodePageParams>
                                 <li key={loop.loop_number} className="list-row">
 
                                     <div className="text-4xl font-thin opacity-30 tabular-nums">{loop.loop_number}</div>
-                                    <div><img className="size-10 rounded-box invert" src="https://cdn-icons-png.flaticon.com/512/649/649899.png" /></div>
+                                    <div><IconImage className="size-10 rounded-box" src="https://cdn-icons-png.flaticon.com/512/649/649899.png" alt="loop" /></div>
                                     <div className="list-col-grow">
                                         <Link href={`/buildings/${building_id}/systems/${loop.system_id}/nodes/${loop.node_number}/loops/${loop.loop_number}`}>
                                             <div>{`Loop ${loop.loop_number}`}</div>

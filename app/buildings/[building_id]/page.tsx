@@ -5,6 +5,7 @@ import { fetchBuildingInfo } from "@/lib/data";
 import Link from "next/link";
 import CreateModalWrapper from "@/app/ui/CreateModalWrapper";
 import CreateButton from "@/app/ui/create_button";
+import IconImage from '@/app/ui/IconImage';
 
 import { createSystem } from "@/lib/actions";
 
@@ -30,7 +31,7 @@ export default async function Building({ params }: { params: Promise<{ building_
                         <li key={bldg.system_id} className="list-row">
                             <div className="text-4xl font-thin opacity-30 tabular-nums">{index + 1}</div>
                             <div>
-                                <img className="size-10 rounded-box invert" src="https://www.pngall.com/wp-content/uploads/1/Electronic-PNG-Picture.png" />
+                                <IconImage className="size-10 rounded-box" src="https://www.pngall.com/wp-content/uploads/1/Electronic-PNG-Picture.png" alt="system" />
                             </div>
                             <div className="list-col-grow">
                                 <Link href={`/buildings/${building_id}/systems/${bldg.system_id}`}>

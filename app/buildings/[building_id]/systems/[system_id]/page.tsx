@@ -2,6 +2,7 @@ import { fetchNodesInfo } from "@/lib/data";
 import { fetchBuildingInfo } from "@/lib/data";
 import Link from "next/link";
 import Image from 'next/image';
+import IconImage from '@/app/ui/IconImage';
 import CreateModalWrapper from "@/app/ui/CreateModalWrapper";
 import CreateButton from "@/app/ui/create_button";
 import Input from "@/app/ui/input";
@@ -61,7 +62,7 @@ export default async function System({ params }: { params: Promise<SystemPagePar
                             <li key={node.node_number} className="list-row">
                                 <div className="text-4xl font-thin opacity-30 tabular-nums">{node.node_number}</div>
                                 <div>
-                                    <Image alt="Node Icon" width={40} height={40} className="size-10 rounded-box invert" src="/icons/node_icon.png" />
+                                    <IconImage alt="Node Icon" width={40} height={40} className="size-10 rounded-box" src="/icons/node_icon.png" />
                                 </div>
                                 <div className="list-col-grow">
                                     <Link href={`/buildings/${building_id}/systems/${node.system_id}/nodes/${node.node_number}`}>

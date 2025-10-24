@@ -1,0 +1,24 @@
+Building,System ID,System Name,System Type,Node Number,Node Location,Loop Number,Loop Info,Zone Prefix,Zone Number,Zone Tag 1,Zone Tag 2
+Park Avenue Management 101 Broadway,1,Fire Alarm Panel,FIRE ALARMc,1,lobby,1,staircase,M,1,Valve,2FL
+Park Avenue Management 101 Broadway,1,Fire Alarm Panel,FIRE ALARMc,1,lobby,1,staircase,M,2,Valve,1FL
+Park Avenue Management 101 Broadway,1,Fire Alarm Panel,FIRE ALARMc,1,lobby,1,staircase,M,5,Duct Detector,1FL Pantry
+Park Avenue Management 101 Broadway,1,Fire Alarm Panel,FIRE ALARMc,1,lobby,1,staircase,M,101,Generator Running,Roof
+Park Avenue Management 101 Broadway,1,Fire Alarm Panel,FIRE ALARMc,1,lobby,1,staircase,S,10,Smoke Detector,2FL IT Room
+Park Avenue Management 101 Broadway,1,Fire Alarm Panel,FIRE ALARMc,1,lobby,1,staircase,V,23,sounder,1fl
+Park Avenue Management 101 Broadway,1,Fire Alarm Panel,FIRE ALARMc,1,lobby,1,staircase,V,203,Heje,Dhhdh 
+Park Avenue Management 101 Broadway,1,Fire Alarm Panel,FIRE ALARMc,1,lobby,1,staircase,_,1,Smoke ,1FL
+Park Avenue Management 101 Broadway,1,Fire Alarm Panel,FIRE ALARMc,1,lobby,1,staircase,j,101,Z,X
+Park Avenue Management 101 Broadway,1,Fire Alarm Panel,FIRE ALARMc,1,lobby,1,staircase,m,7,Smoke Detector,1FL Pantry
+Park Avenue Management 101 Broadway,1,Fire Alarm Panel,FIRE ALARMc,2,3fl dgp,1,cellar - roof,M,3,1,21
+Park Avenue Management 101 Broadway,1,Fire Alarm Panel,FIRE ALARMc,2,3fl dgp,1,cellar - roof,m,1,test tag t,3
+Park Avenue Management 101 Broadway,6,FIRE ALARM Daycare,Fire Alarm,1,1fl zazazxxx,1,slc in kitchen,,104,SMOKE,1FL 4
+Park Avenue Management 101 Broadway,6,FIRE ALARM Daycare,Fire Alarm,1,1fl zazazxxx,1,slc in kitchen,,105,SMOKE,1FL 5
+Park Avenue Management 101 Broadway,6,FIRE ALARM Daycare,Fire Alarm,1,1fl zazazxxx,1,slc in kitchen,,108,SMOKEx,xx
+Park Avenue Management 101 Broadway,6,FIRE ALARM Daycare,Fire Alarm,1,1fl zazazxxx,1,slc in kitchen,,109,11,1
+Park Avenue Management 101 Broadway,6,FIRE ALARM Daycare,Fire Alarm,1,1fl zazazxxx,1,slc in kitchen,,110,SMOKE,x
+Park Avenue Management 101 Broadway,6,FIRE ALARM Daycare,Fire Alarm,1,1fl zazazxxx,1,slc in kitchen,,111,ss,s
+Park Avenue Management 101 Broadway,6,FIRE ALARM Daycare,Fire Alarm,1,1fl zazazxxx,1,slc in kitchen,1231,2,2312,3
+Park Avenue Management 101 Broadway,6,FIRE ALARM Daycare,Fire Alarm,1,1fl zazazxxx,1,slc in kitchen,M,1,SMOKE,1FL
+Park Avenue Management 101 Broadway,6,FIRE ALARM Daycare,Fire Alarm,1,1fl zazazxxx,1,slc in kitchen,S,1,Smoke Detector,1FL Pantry
+Park Avenue Management 101 Broadway,6,FIRE ALARM Daycare,Fire Alarm,1,1fl zazazxxx,1,slc in kitchen,S,4,Smoke Detector,1fl
+Park Avenue Management 101 Broadway,8,Nursing Home Fire System,FIRE ALARM2,1,1FL by reception,1,"Slc 1 - devices, also hornss",M,3,ABCD,TAG 2

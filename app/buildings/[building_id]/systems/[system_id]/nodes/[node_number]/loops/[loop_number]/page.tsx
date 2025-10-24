@@ -1,6 +1,7 @@
 import { fetchLoopsInfo, fetchZonesInfo } from "@/lib/data";
 import CreateButton from "@/app/ui/create_button";
 import CreateModalWrapper from "@/app/ui/CreateModalWrapper";
+import ImportZonesButton from '@/app/ui/ImportZonesButton';
 import { createZone, updateZoneLevelInfo, updateLoopLevelInfo } from "@/lib/actions";
 import Input from "@/app/ui/input";
 import ZoneField from "@/app/ui/ZoneField";
@@ -8,6 +9,7 @@ import ZonesModeToggle from '@/app/ui/ZonesModeToggle';
 import ZoneEditRow from '@/app/ui/ZoneEditRow';
 import EditView from '@/app/ui/EditView';
 import ZonesContainer from '../ZonesContainer';
+import Search from '@/app/ui/search';
 
 
 type LoopPageParams = { building_id: string; system_id: string; node_number: string; loop_number: string };
@@ -47,10 +49,11 @@ export default async function Loops({ params }: { params: Promise<LoopPageParams
 
                 {/* Zones are loaded client-side via ZonesContainer */}
                 <div className="mb-4">
-                    <ZonesContainer building_id={building_id} system_id={system_id} node_number={node_number} loop_number={loop_number} />
+                    <Search placeholder="Search zones..." />
+                        <ZonesContainer building_id={building_id} system_id={system_id} node_number={node_number} loop_number={loop_number} />
                 </div>
 
-            <CreateModalWrapper
+                <CreateModalWrapper
                 title={`Create A New Zone`}
                 type="zone"
                 btnName="Create Zone"
@@ -62,6 +65,9 @@ export default async function Loops({ params }: { params: Promise<LoopPageParams
                     { label: 'Zone Tag 2', type: 'text', placeholder: 'Zone Tag 2', defaultValue: '', id: 'zone_tag_2' },
                 ]}
             />
+                <div className="mt-4">
+                    <ImportZonesButton info={{ building_id, system_id: loopInfo[0].system_id, node_number: loopInfo[0].node_number, loop_number }} />
+                </div>
         </div>
     )
 }

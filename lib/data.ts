@@ -3,10 +3,20 @@ import postgres from 'postgres';
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 
 
-export async function fetchBuildings() {
+export async function fetchBuildings(search?: string) {
   try {
-    console.log('Fetching buildings data...');
-    const data = await sql`SELECT * FROM buildings`;
+    console.log('Fetching buildings data...', search ? `filter=${search}` : 'no filter');
+    let data;
+    if (search && search.trim().length > 0) {
+      const term = `%${search.trim()}%`;
+      // Search only existing columns (building_name). `building_address` is not present in the schema.
+      data = await sql`
+        SELECT * FROM buildings
+        WHERE building_name ILIKE ${term}
+      `;
+    } else {
+      data = await sql`SELECT * FROM buildings`;
+    }
     console.log('Fetching finished.');
 
     return data;
@@ -73,18 +83,38 @@ export async function fetchLoopsInfo(system_id: string, node_number: string) {
 }
 
 
-export async function fetchZonesInfo(system_id: string, node_number: string, loop_number: string) {
+export async function fetchZonesInfo(system_id: string, node_number: string, loop_number: string, search?: string) {
   try {
     console.log('Fetching single building data...');
-  const data = await sql`
-  SELECT * FROM nodes AS n
-  INNER JOIN loops AS l ON l.node_number = n.node_number AND l.system_id = n.system_id
-  INNER JOIN systems AS s ON s.system_id = n.system_id
-  INNER JOIN buildings AS b ON b.building_id = s.building_id
-  INNER JOIN zones AS z ON z.loop_number = l.loop_number AND z.node_number = n.node_number AND z.system_id = n.system_id
-  WHERE l.system_id = ${system_id} AND l.node_number = ${node_number} AND l.loop_number = ${loop_number}
-  -- Treat '_' or empty prefixes as empty string so they sort first, and order zone_number numerically
-  ORDER BY (CASE WHEN z.zone_prefix IN ('', '_') THEN '' ELSE z.zone_prefix END) ASC, z.zone_number::int ASC`;
+  let data;
+  if (search && search.trim().length > 0) {
+    const term = `%${search.trim()}%`;
+    data = await sql`
+    SELECT * FROM nodes AS n
+    INNER JOIN loops AS l ON l.node_number = n.node_number AND l.system_id = n.system_id
+    INNER JOIN systems AS s ON s.system_id = n.system_id
+    INNER JOIN buildings AS b ON b.building_id = s.building_id
+    INNER JOIN zones AS z ON z.loop_number = l.loop_number AND z.node_number = n.node_number AND z.system_id = n.system_id
+    WHERE l.system_id = ${system_id} AND l.node_number = ${node_number} AND l.loop_number = ${loop_number}
+      AND (
+        z.zone_tag_1 ILIKE ${term} OR
+        z.zone_tag_2 ILIKE ${term} OR
+        z.zone_prefix ILIKE ${term} OR
+        z.zone_number::text ILIKE ${term}
+      )
+    -- Treat '_' or empty prefixes as empty string so they sort first, and order zone_number numerically
+    ORDER BY (CASE WHEN z.zone_prefix IN ('', '_') THEN '' ELSE z.zone_prefix END) ASC, z.zone_number::int ASC`;
+  } else {
+    data = await sql`
+    SELECT * FROM nodes AS n
+    INNER JOIN loops AS l ON l.node_number = n.node_number AND l.system_id = n.system_id
+    INNER JOIN systems AS s ON s.system_id = n.system_id
+    INNER JOIN buildings AS b ON b.building_id = s.building_id
+    INNER JOIN zones AS z ON z.loop_number = l.loop_number AND z.node_number = n.node_number AND z.system_id = n.system_id
+    WHERE l.system_id = ${system_id} AND l.node_number = ${node_number} AND l.loop_number = ${loop_number}
+    -- Treat '_' or empty prefixes as empty string so they sort first, and order zone_number numerically
+    ORDER BY (CASE WHEN z.zone_prefix IN ('', '_') THEN '' ELSE z.zone_prefix END) ASC, z.zone_number::int ASC`;
+  }
     console.log('Fetching finished.');
 
     console.log('Data:', data);

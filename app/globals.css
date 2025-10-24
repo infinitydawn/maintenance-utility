@@ -30,3 +30,9 @@ body {
   --background: #ffffff;
   --foreground: #171717;
 }
+
+/* Invert building icons when DaisyUI/theme is set to dark via data-theme on <html> */
+[data-theme="dark"] .theme-icon {
+  filter: invert(1) brightness(1);
+  transition: filter 160ms ease;
+}

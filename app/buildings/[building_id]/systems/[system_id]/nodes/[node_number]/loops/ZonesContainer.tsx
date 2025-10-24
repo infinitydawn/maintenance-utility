@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import CreateModalWrapper from '@/app/ui/CreateModalWrapper';
 import ZonesModeToggle from '@/app/ui/ZonesModeToggle';
 import EditView from '@/app/ui/EditView';
@@ -10,11 +11,13 @@ import ZoneEditRow from '@/app/ui/ZoneEditRow';
 export default function ZonesContainer({ building_id, system_id, node_number, loop_number }: { building_id: string; system_id: string; node_number: string; loop_number: string }) {
   const [zones, setZones] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const searchParams = useSearchParams();
+  const query = searchParams.get('query') ?? undefined;
 
-  async function loadZones() {
+  async function loadZones(q?: string) {
     setLoading(true);
     try {
-  const res = await fetch('/api/zones/fetch', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ system_id, node_number, loop_number }) });
+  const res = await fetch('/api/zones/fetch', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ system_id, node_number, loop_number, query: q }) });
   const data = await res.json();
   if (!res.ok) throw new Error(data.error || 'Failed to fetch zones');
   setZones(data.rows || []);
@@ -25,7 +28,7 @@ export default function ZonesContainer({ building_id, system_id, node_number, lo
     }
   }
 
-  useEffect(() => { loadZones(); }, []);
+  useEffect(() => { loadZones(query); }, [query]);
   const { mode } = useMode();
 
   return (

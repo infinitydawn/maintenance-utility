@@ -284,3 +284,27 @@ export async function fetchInspectionsForZone(info: { system_id: number; node_nu
         throw err;
     }
 }
+
+// User management for basic auth
+export async function createUser(data: { username: string; password_hash: string; salt: string; is_admin?: boolean }) {
+    try {
+        const result = await sql`
+            INSERT INTO users (username, password_hash, salt, is_admin)
+            VALUES (${data.username}, ${data.password_hash}, ${data.salt}, ${data.is_admin || false})
+            RETURNING user_id, username, is_admin`;
+        return result[0];
+    } catch (err) {
+        console.error('createUser error', err);
+        throw err;
+    }
+}
+
+export async function getUserByUsername(username: string) {
+    try {
+        const rows = await sql`SELECT user_id, username, password_hash, salt, is_admin FROM users WHERE username = ${username} LIMIT 1`;
+        return rows[0] ?? null;
+    } catch (err) {
+        console.error('getUserByUsername error', err);
+        throw err;
+    }
+}
