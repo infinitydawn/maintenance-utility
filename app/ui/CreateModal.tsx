@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 interface Field {
     label: string;
@@ -25,9 +25,14 @@ export default function CreateModal(props: CreateModalProps) {
     const [values, setValues] = useState<Record<string, any>>(initialValues);
     const [loading, setLoading] = useState(false);
 
+    const modalBoxRef = useRef<HTMLDivElement | null>(null);
+
     useEffect(() => {
         if (open) {
             setValues(initialValues);
+            // Focus the dialog container for accessibility without focusing the first input
+            // This prevents mobile browsers from auto-zooming when an input is immediately focused.
+            setTimeout(() => modalBoxRef.current?.focus(), 0);
         }
     }, [open]);
 
@@ -54,7 +59,7 @@ export default function CreateModal(props: CreateModalProps) {
 
     return (
         <div className="modal modal-open">
-            <div className="modal-box w-11/12 max-w-5xl">
+            <div ref={modalBoxRef} tabIndex={-1} className="modal-box w-11/12 max-w-5xl">
                 <h3 className="font-bold text-lg">{title}</h3>
                 <form onSubmit={handleCreate}>
                     {fields.map((field) => (

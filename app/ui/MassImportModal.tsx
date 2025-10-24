@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 interface MassImportModalProps {
   open: boolean;
@@ -15,12 +15,17 @@ export default function MassImportModal({ open, onCloseAction, info, onImported 
   const [preview, setPreview] = useState<any[]>([]);
   const [errors, setErrors] = useState<string | null>(null);
 
+  const modalBoxRef = useRef<HTMLDivElement | null>(null);
+
   useEffect(() => {
     if (!open) {
       setText('');
       setFileName(null);
       setPreview([]);
       setErrors(null);
+    } else {
+      // Focus the dialog container to avoid auto-focusing inputs and triggering mobile zoom
+      setTimeout(() => modalBoxRef.current?.focus(), 0);
     }
   }, [open]);
 
@@ -117,7 +122,7 @@ export default function MassImportModal({ open, onCloseAction, info, onImported 
 
   return (
     <div className="modal modal-open">
-      <div className="modal-box w-11/12 max-w-3xl">
+  <div ref={modalBoxRef} tabIndex={-1} className="modal-box w-11/12 max-w-3xl">
         <h3 className="font-bold text-lg">Mass Import Zones</h3>
         <p className="text-sm opacity-70">CSV format: zone_number,zone_prefix,zone_tag_1,zone_tag_2 (header optional)</p>
 
