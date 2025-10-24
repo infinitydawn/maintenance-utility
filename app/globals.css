@@ -36,3 +36,14 @@ body {
   filter: invert(1) brightness(1);
   transition: filter 160ms ease;
 }
+
+/* Prevent mobile browsers from auto-zooming on inputs by ensuring a readable font-size on small screens.
+   Many mobile browsers (iOS Safari, Android WebView) automatically zoom to inputs when the font-size is < 16px.
+   We increase the control font-size on small viewports to avoid that behavior while preserving layout.
+*/
+@media (max-width: 640px) {
+  input, textarea, select, button, .input, .textarea {
+    font-size: 16px;
+    line-height: 1.2;
+  }
+}
