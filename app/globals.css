@@ -42,8 +42,10 @@ body {
    We increase the control font-size on small viewports to avoid that behavior while preserving layout.
 */
 @media (max-width: 640px) {
-  input, textarea, select, button, .input, .textarea {
-    font-size: 16px;
-    line-height: 1.2;
+  /* Ensure form controls are at least 16px on small screens to prevent mobile browsers from auto-zooming
+     Include DaisyUI helper classes (.input, .input-sm, .input-bordered) and common input types. */
+  input, textarea, select, button, .input, .textarea, .input-sm, .input-bordered, input[type="number"], input[type="text"], textarea {
+    font-size: 16px !important;
+    line-height: 1.2 !important;
   }
 }
